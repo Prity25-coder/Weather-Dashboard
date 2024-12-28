@@ -4,9 +4,9 @@ import getEncodedURI from "../utils/getEncodedURI";
 import getQueryParams from "../utils/getQueryParams";
 
 const { baseUrl, dailyVar } = config;
-console.log(dailyVar.toString());
+// console.log(dailyVar.toString());
 
-async function fetchData(weatherInputs) {
+async function fetchData(weatherInputs, navigate) {
   const queryParams = `${getQueryParams(
     weatherInputs
   )}daily=${dailyVar.toString()}`;
@@ -17,6 +17,11 @@ async function fetchData(weatherInputs) {
     const response = await fetch(`${baseUrl}${encodedQueryParams}`);
     const data = await response.json();
     console.log(data);
+    navigate("/dashboard", {
+      state: {
+        data,
+      },
+    });
   } catch (error) {
     console.log(error);
   }
@@ -31,7 +36,7 @@ const fetchData2 = async (weatherInputs) => {
     start_date: startDate,
     end_date: endDate,
     daily: dailyVar,
-    format: "json"
+    format: "json",
   };
 
   try {
@@ -42,4 +47,4 @@ const fetchData2 = async (weatherInputs) => {
   }
 };
 
-export  {fetchData, fetchData2};
+export { fetchData, fetchData2 };

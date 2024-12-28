@@ -1,18 +1,28 @@
-import { useCallback, useState } from "react";
-import { fetchData, fetchData2 } from "../../services/weatherService";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { fetchData } from "../../services/weatherService";
 import { useNavigate } from "react-router-dom";
+import useNavigator from "../../hooks/useNavigator";
 
 function WeatherForm() {
-  const [latitude, setLatitude] = useState();
-  const [longitude, setLongitude] = useState();
+  const [error, currLatitude, currLongitude] = useNavigator();
+
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setLatitude(currLatitude);
+    setLongitude(currLongitude);
+  }, [error, currLatitude, currLongitude]);
+
   const handleOnSubmit = useCallback(
     (e) => {
       e.preventDefault();
+
+      if (!(latitude && longitude && startDate && endDate)) return;
 
       const data = {
         latitude,
@@ -20,14 +30,20 @@ function WeatherForm() {
         startDate,
         endDate,
       };
-
-      console.log("Data: ", data);
-      fetchData(data);
-      // fetchData2(data)
-      // navigate("/dashboard");
+      // console.log("Data: ", data);
+      fetchData(data, navigate);
     },
-    [latitude, longitude, startDate, endDate]
+    [latitude, longitude, startDate, endDate, navigate]
   );
+
+  const maxDate = useMemo(() => {
+    const date = new Date();
+    const yyyy = date.getFullYear();
+    const mm = date.getMonth() + 1;
+    const dd = date.getDate() - 1;
+
+    return `${yyyy}-${mm}-${dd}`;
+  }, []);
 
   return (
     <div className="">
@@ -37,6 +53,15 @@ function WeatherForm() {
             Weather Dashboard
           </h1>
         </div>
+
+        {error && (
+          <div className="py-3 m-2 rounded-md bg-yellow-200">
+            <p className="text-center text-orange-400 text-xl">
+              {error.message}
+            </p>
+          </div>
+        )}
+
         <form
           onSubmit={handleOnSubmit}
           className="flex justify-start items-start gap-2 mt-2 w-full"
@@ -51,7 +76,7 @@ function WeatherForm() {
               id="lat"
               value={latitude}
               placeholder="Enter valid Latitude"
-              onChange={(e) => setLatitude(Number(e.target.value))}
+              onChange={(e) => setLatitude(Number(e.target.value).toFixed(2))}
             />
           </div>
 
@@ -65,7 +90,7 @@ function WeatherForm() {
               id="long"
               value={longitude}
               placeholder="Enter valid Longitude"
-              onChange={(e) => setLongitude(Number(e.target.value))}
+              onChange={(e) => setLongitude(Number(e.target.value).toFixed(2))}
             />
           </div>
 
@@ -80,6 +105,7 @@ function WeatherForm() {
               value={startDate}
               placeholder="Choose start date"
               onChange={(e) => setStartDate(e.target.value)}
+              max={maxDate}
             />
           </div>
 
@@ -94,6 +120,7 @@ function WeatherForm() {
               value={endDate}
               placeholder="Choose end date"
               onChange={(e) => setEndDate(e.target.value)}
+              max={maxDate}
             />
           </div>
 

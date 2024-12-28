@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import WeatherForm from "./components/WeatherForm";
-import GraphData from "./components/GraphData";
+import Dashboard from "./components/Dashboard";
 
 const appRoutes = createBrowserRouter([
   {
@@ -9,7 +9,7 @@ const appRoutes = createBrowserRouter([
   },
   {
     path: "/dashboard",
-    element: <GraphData />,
+    element: <Dashboard />,
   },
 ]);
 
