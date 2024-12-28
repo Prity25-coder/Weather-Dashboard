@@ -1,0 +1,75 @@
+Front-End Development Challenge Brief:-
+    Using the Open-Meteo Historical Weather API, build a responsive and interactive dashboard that allows users to view weather data for a specific location and date range.
+    - API Link:- https://open-meteo.com/en/docs/historical-weather-api
+
+Requirements:-
+    Dashboard Inputs:-
+    - Latitude: An input box to enter latitude (allowing only valid inputs).
+    - Longitude: An input box to enter longitude (allowing only valid inputs).
+    - Start Date: A date picker for the start date.
+    - End Date: A date picker for the end date.
+
+API Integration:-
+  Use the Open-Meteo Historical Weather API to fetch weather data based on user inputs.
+
+Use the following Daily Weather Variables:-
+    Maximum Temperature (2 m)
+    Minimum Temperature (2 m)
+    Mean Temperature (2 m)
+    Maximum Apparent Temperature (2 m)
+    Minimum Apparent Temperature (2 m)
+    Mean Apparent Temperature (2 m)
+
+Data Display:-
+
+  Graph: Display the fetched data as a graph (e.g., using a library like Chart.js or any other you prefer) showing trends over the selected period.
+
+  Data Table: Display the same data in a tabular format with pagination (e.g., showing 10/20/50 rows per page).
+
+UI Expectations:-
+    Create a responsive, visually appealing UI with creative styling using Tailwind CSS. Ensure the dashboard works seamlessly across devices (desktop, tablet, mobile).
+
+Additional Features:-
+    Show a loading state while fetching data from the API.
+
+    Handle null or missing data gracefully and display appropriate error messages for invalid inputs.
+
+    Optimize API calls to avoid excessive requests (as this is a free API).
+
+Submission Guidelines:-
+Code Repository:-
+    Share the link to a public GitHub repository (or equivalent) containing your code. Ensure the repository includes a clear README.md file with setup instructions.
+
+Live Demo:-
+    Host your application online using Vercel, Netlify, or any other free hosting service. Only hosted applications will be evaluated.
+
+Deadline:-
+    Submit your solution on or before 01-01-2025.
+
+Evaluation Criteria:-
+UI/UX Design:-
+    Creativity in design and responsiveness. Effective use of Tailwind CSS for styling.
+
+Technical Implementation:-
+    Proper API integration and data handling. Code structure, modularity, and readability.
+
+Performance:-
+    Optimization of API calls. Handling edge cases (e.g., null data, invalid inputs).
+
+Pagination:-
+    Implementation of pagination for the data table to make large datasets easy to navigate.
+
+Completeness:-
+    The solution should meet all requirements, including the live demo.
+
+    We look forward to seeing your work! Best of luck, and let your creativity shine!
+
+    In case of any queries, please mail info@inrisk.insure with the subject: Front End Developer - Challenge Queries.  
+
+
+----------------------solution------------------------
+Open weather open-meteo link go to down, base url:-https://archive-api.open-meteo.com/v1/archive
+
+- url:-  https://archive-api.open-meteo.com/v1/archive?latitude=52.52&longitude=13.41&start_date=2024-12-06&end_date=2024-12-20&hourly=temperature_2m
+
+- &daily=temperature_2m_max,temperature_2m_min,temperature_2m_mean,apparent_temperature_max,apparent_temperature_min,apparent_temperature_mean
