@@ -48,11 +48,9 @@ function WeatherForm() {
   return (
     <div className="">
       <div>
-        <div>
-          <h1 className="text-center text-2xl font-bold py-4 bg-green-400 text-white">
-            Weather Dashboard
-          </h1>
-        </div>
+        <h1 className="text-center text-2xl font-bold py-4 bg-green-400 text-white">
+          Weather Dashboard
+        </h1>
 
         {error && (
           <div className="py-3 m-2 rounded-md bg-yellow-200">
@@ -61,13 +59,12 @@ function WeatherForm() {
             </p>
           </div>
         )}
-
-        <form
-          onSubmit={handleOnSubmit}
-          className="flex justify-start items-start gap-2 mt-2 w-full"
-        >
-          <div>
-            <label htmlFor="lat" className="m-4">
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 flex justify-center items-center" >
+          <form
+            onSubmit={handleOnSubmit}
+            className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"
+          >
+            <label htmlFor="lat" className="">
               Latitude:
             </label>
             <input
@@ -78,10 +75,8 @@ function WeatherForm() {
               placeholder="Enter valid Latitude"
               onChange={(e) => setLatitude(Number(e.target.value).toFixed(2))}
             />
-          </div>
 
-          <div>
-            <label htmlFor="long" className="m-4">
+            <label htmlFor="long" className="">
               Longitude:
             </label>
             <input
@@ -92,10 +87,8 @@ function WeatherForm() {
               placeholder="Enter valid Longitude"
               onChange={(e) => setLongitude(Number(e.target.value).toFixed(2))}
             />
-          </div>
 
-          <div>
-            <label htmlFor="start_date" className="m-4">
+            <label htmlFor="start_date" className="">
               Start Date:{" "}
             </label>
             <input
@@ -107,10 +100,8 @@ function WeatherForm() {
               onChange={(e) => setStartDate(e.target.value)}
               max={maxDate}
             />
-          </div>
 
-          <div>
-            <label htmlFor="end_date" className="m-4">
+            <label htmlFor="end_date" className="">
               End Date:{" "}
             </label>
             <input
@@ -122,17 +113,15 @@ function WeatherForm() {
               onChange={(e) => setEndDate(e.target.value)}
               max={maxDate}
             />
-          </div>
 
-          <div>
             <button
-              className="border-2 text-white font-bold rounded-lg bg-blue-700 px-10 ml-2  hover:bg-blue-900"
+              className="rounded-sm bg-blue-600 py-2 mt-4  hover:bg-blue-900 w-full text-white"
               type="submit"
             >
               Search
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
