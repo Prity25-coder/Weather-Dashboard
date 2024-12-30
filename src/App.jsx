@@ -1,6 +1,6 @@
 import { RouterProvider } from "react-router-dom";
 
-import Chart from "chart.js/auto"
+import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 
 import "./App.css";

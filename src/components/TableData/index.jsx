@@ -1,74 +1,70 @@
-import PropTypes from "prop-types";
-import { useState } from "react";
 
-const monthMap = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+import PropTypes from "prop-types";
+
+import Pagination from "../Pagination";
+import { DEFAULT_PAGE_SIZE } from "../../constants/constants";
 
 const TableData = ({ data }) => {
-  // console.log(data);
-  const {
-    daily: {
-      time = [],
-      temperature_2m_max = [],
-      temperature_2m_min = [],
-      temperature_2m_mean = [],
-      apparent_temperature_max = [],
-      apparent_temperature_min = [],
-      apparent_temperature_mean = [],
-    },
-  } = data || {};
-  const labels = time.map((dd) => {
-    const date = new Date(dd);
-    return `${date.getDate()} ${monthMap[date.getMonth()]}`;
-  });
+  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
+  const [currentData, setCurrentData] = useState([]);
+  const [pageNo, setPageNo] = useState(1);
 
+  const tableData = useMemo(() => {
+    const {
+      daily: {
+        time: labels = [],
+        temperature_2m_max = [],
+        temperature_2m_min = [],
+        temperature_2m_mean = [],
+        apparent_temperature_max = [],
+        apparent_temperature_min = [],
+        apparent_temperature_mean = [],
+      },
+    } = data || {};
 
-  // pagination
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // Number of rows per page
-  const totalPages = Math.ceil(labels.length / itemsPerPage);
+    return labels.map((label, index) => {
+      return {
+        date: label,
+        temperature_2m_max: temperature_2m_max[index],
+        temperature_2m_min: temperature_2m_min[index],
+        temperature_2m_mean: temperature_2m_mean[index],
+        apparent_temperature_max: apparent_temperature_max[index],
+        apparent_temperature_min: apparent_temperature_min[index],
+        apparent_temperature_mean: apparent_temperature_mean[index],
+      };
+    });
+  }, [data]);
 
-  // Get paginated data
-  const startIdx = (currentPage - 1) * itemsPerPage;
-  const endIdx = startIdx + itemsPerPage;
+  useEffect(() => {
+    setCurrentData(tableData.slice(0, pageSize));
+  }, [pageSize, tableData]);
 
-  const paginatedLabels = labels.slice(startIdx, endIdx);
-  const MaxTemp = temperature_2m_max.slice(startIdx, endIdx);
-  const MinTemp = temperature_2m_min.slice(startIdx, endIdx);
-  const MeanTemp = temperature_2m_mean.slice(startIdx, endIdx);
-  const ApparentMax = apparent_temperature_max.slice(startIdx, endIdx);
-  const ApparentMin = apparent_temperature_min.slice(startIdx, endIdx);
-  const ApparentMean = apparent_temperature_mean.slice(startIdx, endIdx);
+  const onNextClick = useCallback(() => {
+    if (pageNo * pageSize > tableData.length) return;
 
-  const handleNext = () => {
-    if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
-  };
+    setCurrentData(tableData.slice(pageNo * pageSize, (pageNo + 1) * pageSize));
+    setPageNo(pageNo + 1);
+  }, [tableData, pageNo, pageSize]);
 
-  const handlePrevious = () => {
-    if (currentPage > 1) setCurrentPage((prev) => prev - 1);
-  };
+  const onPrevClick = useCallback(() => {
+    if (pageNo * pageSize < tableData.length && pageNo === 1) return;
 
-  
+    setCurrentData(
+      tableData.slice((pageNo - 2) * pageSize, (pageNo - 1) * pageSize)
+    );
+
+    setPageNo(pageNo - 1);
+  }, [tableData, pageNo, pageSize]);
+
   return (
     <div className="p-4">
       <h1 className="flex justify-center items-center my-4 bg-orange-500 text-white py-4 font-bold text-2xl">
-       Weather Table Data
+        Weather Table Data
       </h1>
 
-      <table className="table-auto border-collapse border border-gray-300 w-full">
+      <table className="table-auto border-collapse border border-gray-300 w-full text-center">
         <thead>
           <tr>
             <th className="border border-gray-300 px-4 py-2">Date</th>
@@ -93,66 +89,48 @@ const TableData = ({ data }) => {
           </tr>
         </thead>
         <tbody>
-          {paginatedLabels.map((label, index) => (
+          {currentData.map((data, index) => (
             <tr key={index}>
-              <td className="border border-gray-300">{label}</td>
+              <td className="border border-gray-300">{data["date"]}</td>
 
               <td className="border border-gray-300 ">
-                {MaxTemp[index] || "N/A"}
+                {data["temperature_2m_max"] || "N/A"}
               </td>
 
               <td className="border border-gray-300 ">
-                {MinTemp[index] || "N/A"}
+                {data["temperature_2m_min"] || "N/A"}
               </td>
 
               <td className="border border-gray-300 ">
-                {MeanTemp[index] || "N/A"}
+                {data["temperature_2m_mean"] || "N/A"}
               </td>
 
               <td className="border border-gray-300 ">
-                {ApparentMax[index] || "N/A"}
+                {data["apparent_temperature_max"] || "N/A"}
               </td>
 
               <td className="border border-gray-300 ">
-                {ApparentMin[index] || "N/A"}
+                {data["apparent_temperature_min"] || "N/A"}
               </td>
 
               <td className="border border-gray-300 ">
-                {ApparentMean[index] || "N/A"}
+                {data["apparent_temperature_mean"] || "N/A"}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      
-      {/* pagination */}
-      <div className="flex justify-end mr-10 mt-2">
-        <button
-          className="mx-1  text-sm font-semibold text-gray-900"
-          onClick={handlePrevious}
-        >
-          &larr; Previous
-        </button>
 
-        <button className="mx-1 flex items-center rounded-md border border-gray-400 px-3 py-1 text-gray-900 hover:scale-105">
-          1
-        </button>
-        <button className="mx-1 flex items-center rounded-md border border-gray-400 px-3 py-1 text-gray-900 hover:scale-105">
-          2
-        </button>
-        <button className="mx-1 flex items-center rounded-md border border-gray-400 px-3 py-1 text-gray-900 hover:scale-105">
-          3
-        </button>
-        <button className="mx-1 flex items-center rounded-md border border-gray-400 px-3 py-1 text-gray-900 hover:scale-105">
-          Last
-        </button>
-        <button
-          className="mx-2 text-sm font-semibold text-gray-900"
-          onClick={handleNext}
-        >
-          Next &rarr;
-        </button>
-      </div>
+      {/* pagination */}
+      <Pagination
+        pageSize={[10, 20, 50]}
+        currentPageSize={pageSize}
+        onPageSizeChange={setPageSize}
+        onPrevClick={onPrevClick}
+        onNextClick={onNextClick}
+        currentPageNo={pageNo}
+        total={tableData.length}
+      />
     </div>
   );
 };
