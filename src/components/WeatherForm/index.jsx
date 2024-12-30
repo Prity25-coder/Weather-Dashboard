@@ -10,6 +10,7 @@ function WeatherForm() {
   const [longitude, setLongitude] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,7 +20,7 @@ function WeatherForm() {
   }, [error, currLatitude, currLongitude]);
 
   const handleOnSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
 
       if (!(latitude && longitude && startDate && endDate)) return;
@@ -31,7 +32,9 @@ function WeatherForm() {
         endDate,
       };
       // console.log("Data: ", data);
-      fetchData(data, navigate);
+      setLoading(true);
+      await fetchData(data, navigate);
+      setLoading(false);
     },
     [latitude, longitude, startDate, endDate, navigate]
   );
@@ -59,7 +62,7 @@ function WeatherForm() {
             </p>
           </div>
         )}
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 flex justify-center items-center" >
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 flex justify-center items-center">
           <form
             onSubmit={handleOnSubmit}
             className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"
@@ -115,10 +118,11 @@ function WeatherForm() {
             />
 
             <button
-              className="rounded-sm bg-blue-600 py-2 mt-4  hover:bg-blue-900 w-full text-white"
+              className="rounded-sm bg-blue-600 py-2 mt-4  hover:bg-blue-900 w-full text-white disabled:bg-gray-500 disabled:hover:bg-none"
               type="submit"
+              disabled={loading}
             >
-              Search
+              {loading ? "Searching" : "Search"}
             </button>
           </form>
         </div>
